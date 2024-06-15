@@ -3,6 +3,8 @@ import express, { Application, Request, Response } from "express";
 import globalErrorHandler from "./app/middlewares/globalErrorHandler";
 import notFound from "./app/middlewares/notFound";
 import { UserRoutes } from "./app/modules/user/user.route";
+import { AuthRoutes } from "./app/modules/Auth/auth.route";
+import { FacilityRoutes } from "./app/modules/facility/facility.route";
 
 const app: Application = express();
 
@@ -12,6 +14,8 @@ app.use(cors());
 
 // application routes
 app.use("/", UserRoutes);
+app.use("/", AuthRoutes);
+app.use("/", FacilityRoutes)
 
 app.get("/", (req: Request, res: Response) => {
     res.send("Sports Facility Booking Platform Server is running correctly..!");
