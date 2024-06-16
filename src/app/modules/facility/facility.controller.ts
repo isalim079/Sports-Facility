@@ -29,7 +29,7 @@ const getAllFacilityFromDB = catchAsync(async(req, res) => {
 const updateFacilityFromDB = catchAsync(async (req, res) => {
     const {id} = req.params
     const updateInfo = req.body;
-    const result = await FacilityServices.updateProductIntoDB(id, updateInfo)
+    const result = await FacilityServices.updateFacilityIntoDB(id, updateInfo)
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
@@ -38,8 +38,20 @@ const updateFacilityFromDB = catchAsync(async (req, res) => {
     })
 })
 
+const deleteFacilityFromDB = catchAsync(async (req, res) => {
+    const {id} = req.params;
+    const result = await FacilityServices.deleteFacilityFromDB(id)
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Facility deleted successfully",
+        data: result
+    })
+})
+
 export const FacilityControllers = {
     createFacilityIntoDB,
     getAllFacilityFromDB,
-    updateFacilityFromDB
+    updateFacilityFromDB,
+    deleteFacilityFromDB
 }
