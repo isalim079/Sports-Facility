@@ -14,6 +14,19 @@ const facilityValidationSchema = z.object({
     }),
 });
 
+const updateFacilityValidationSchema = z.object({
+    body: z.object({
+        name: z.string().optional(),
+        description: z
+            .string().optional(),
+        pricePerHour: z
+            .number().optional(),
+        location: z.string().optional(),
+        isDeleted: z.boolean().optional().default(false),
+    }),
+});
+
 export const FacilityValidation = {
     facilityValidationSchema,
+    updateFacilityValidationSchema
 };

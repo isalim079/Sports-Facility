@@ -13,6 +13,12 @@ router.post(
     FacilityControllers.createFacilityIntoDB
 );
 
-router.get('/api/facility', auth(), FacilityControllers.getAllFacilityFromDB)
+router.get("/api/facility", FacilityControllers.getAllFacilityFromDB);
 
-export const FacilityRoutes = router
+router.put(
+    "/api/facility/:id",
+    auth(USER_ROLE.admin),
+    FacilityControllers.updateFacilityFromDB
+);
+
+export const FacilityRoutes = router;

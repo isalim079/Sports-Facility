@@ -26,7 +26,20 @@ const getAllFacilityFromDB = catchAsync(async(req, res) => {
     })
 })
 
+const updateFacilityFromDB = catchAsync(async (req, res) => {
+    const {id} = req.params
+    const updateInfo = req.body;
+    const result = await FacilityServices.updateProductIntoDB(id, updateInfo)
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Facility updated successfully",
+        data: result
+    })
+})
+
 export const FacilityControllers = {
     createFacilityIntoDB,
-    getAllFacilityFromDB
+    getAllFacilityFromDB,
+    updateFacilityFromDB
 }

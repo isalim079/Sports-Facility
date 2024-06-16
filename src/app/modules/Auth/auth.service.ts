@@ -26,6 +26,7 @@ const loginUser = async (payload: TLoginUser) => {
 
 
     const jwtPayload = {
+      id: isUserEmailExists?._id,
         email: isUserEmailExists?.email,
         role: isUserEmailExists?.role,
       };
@@ -37,6 +38,14 @@ const loginUser = async (payload: TLoginUser) => {
       );
     
       return {
+        user: {
+          _id: isUserEmailExists._id,
+          name: isUserEmailExists.name,
+          email: isUserEmailExists.email,
+          role: isUserEmailExists.role,
+          phone: isUserEmailExists.phone,
+          address: isUserEmailExists.address,
+      },
         accessToken
       };
 }

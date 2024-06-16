@@ -19,7 +19,7 @@ const userSchema = new Schema<TUser>(
         address: { type: String, required: true },
     },
     {
-        timestamps: true,
+        
         toJSON: {
             transform: (doc, ret) => {
                 delete ret.password;
