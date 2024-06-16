@@ -6,6 +6,7 @@ import httpStatus from "http-status";
 import { TBooking, TTimeSlot } from "./booking.interface";
 import { Types } from "mongoose";
 import { Facility } from "../facility/facility.model";
+import catchAsync from "../../utils/catchAsync";
 
 const createBookingIntoDB = async (
     userId: Types.ObjectId,
@@ -61,8 +62,8 @@ const createBookingIntoDB = async (
     );
     const payableAmount = durationInHours * facilityDetails.pricePerHour;
 
-    const formattedStartTime = moment(startDateTime).format('HH:mm');
-    const formattedEndTime = moment(endDateTime).format('HH:mm');
+    const formattedStartTime = moment(startDateTime).format("HH:mm");
+    const formattedEndTime = moment(endDateTime).format("HH:mm");
 
     // Create booking
     const newBooking = await Booking.create({
@@ -79,78 +80,65 @@ const createBookingIntoDB = async (
 };
 
 const checkAvailabilityFromDB = async (date: string) => {
-    const bookingDate = moment(date, "YYYY-MM-DD").startOf("day").toDate();
+    const queryDate = date ? moment(date, "YYYY-MM-DD").toDate() : new Date();
 
     const bookings = await Booking.find({
-        date: {
-            $gte: bookingDate,
-            $lt: moment(bookingDate).endOf("day").toDate(),
-        },
-        isBooked: BOOKING_INFO.confirmed,
+        date: queryDate,
+        isBooked: "confirmed",
     });
 
-    const totalSlots = [
-        {
-            startTime: "00:00",
-            endTime: "24:00",
-        },
-    ];
+    const totalSlots = [{ startTime: "00:00", endTime: "24:00" }];
 
     bookings.forEach((booking) => {
-        const bookingStartTime = moment(booking.startTime).format("HH:mm");
-        const bookingEndTime = moment(booking.endTime).format("HH:mm");
-
-        const newSlots: TTimeSlot[] = [];
+        const bookedStart = moment(booking.startTime, "HH:mm");
+        const bookedEnd = moment(booking.endTime, "HH:mm");
+        const newSlots: { startTime: string; endTime: string }[] = [];
 
         totalSlots.forEach((slot) => {
+            const slotStart = moment(slot.startTime, "HH:mm");
+            const slotEnd = moment(slot.endTime, "HH:mm");
+
             if (
-                bookingStartTime > slot.startTime &&
-                bookingEndTime < slot.endTime
+                bookedStart.isAfter(slotStart) &&
+                bookedStart.isBefore(slotEnd)
             ) {
                 newSlots.push({
                     startTime: slot.startTime,
-                    endTime: bookingStartTime,
+                    endTime: bookedStart.format("HH:mm"),
                 });
+            }
+            if (bookedEnd.isAfter(slotStart) && bookedEnd.isBefore(slotEnd)) {
                 newSlots.push({
-                    startTime: bookingEndTime,
+                    startTime: bookedEnd.format("HH:mm"),
                     endTime: slot.endTime,
                 });
-            } else if (
-                bookingStartTime <= slot.startTime &&
-                bookingEndTime >= slot.endTime
+            }
+            if (
+                !(
+                    bookedStart.isSameOrAfter(slotEnd) ||
+                    bookedEnd.isSameOrBefore(slotStart)
+                )
             ) {
-                throw new AppError(
-                    httpStatus.CONFLICT,
-                    "Already booked. no slot can be added"
-                );
-            } else if (
-                bookingStartTime <= slot.startTime &&
-                bookingEndTime > slot.startTime &&
-                bookingEndTime < slot.endTime
-            ) {
-                newSlots.push({
-                    startTime: bookingEndTime,
-                    endTime: slot.endTime,
-                });
-            } else if (
-                bookingStartTime > slot.startTime &&
-                bookingStartTime < slot.endTime &&
-                bookingEndTime >= slot.endTime
-            ) {
-                newSlots.push({
-                    startTime: slot.startTime,
-                    endTime: bookingStartTime,
-                });
-            } else {
-                newSlots.push(slot);
+                if (
+                    bookedStart.isSameOrBefore(slotStart) &&
+                    bookedEnd.isSameOrAfter(slotEnd)
+                ) {
+                    newSlots.push({
+                        startTime: slot.startTime,
+                        endTime: slot.startTime,
+                    });
+                }
             }
         });
 
-        totalSlots.length = 0;
-        newSlots.forEach((slot) => totalSlots.push(slot));
+        totalSlots.splice(0, totalSlots.length, ...newSlots);
     });
 
-    return totalSlots;
+    const availableSlots = totalSlots.filter((slot) =>
+        moment(slot.startTime, "HH:mm").isBefore(moment(slot.endTime, "HH:mm"))
+    );
+
+    return availableSlots;
 };
 
 export const BookingServices = {

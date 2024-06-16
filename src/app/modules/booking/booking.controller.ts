@@ -6,7 +6,6 @@ import httpStatus from "http-status";
 
 const createBookingIntoDB = catchAsync(async (req, res) => {
     const userId = req.user.id
-    console.log(userId);
     const result = await BookingServices.createBookingIntoDB(userId, req.body)
     sendResponse(res, {
         statusCode: httpStatus.OK,
