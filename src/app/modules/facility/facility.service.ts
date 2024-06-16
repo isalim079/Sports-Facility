@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+
 import { TFacility } from "./facility.interface";
 import { Facility } from "./facility.model";
 

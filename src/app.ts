@@ -5,6 +5,7 @@ import notFound from "./app/middlewares/notFound";
 import { UserRoutes } from "./app/modules/user/user.route";
 import { AuthRoutes } from "./app/modules/Auth/auth.route";
 import { FacilityRoutes } from "./app/modules/facility/facility.route";
+import { BookingRoutes } from "./app/modules/booking/booking.route";
 
 const app: Application = express();
 
@@ -16,6 +17,7 @@ app.use(cors());
 app.use("/", UserRoutes);
 app.use("/", AuthRoutes);
 app.use("/", FacilityRoutes)
+app.use('/', BookingRoutes)
 
 app.get("/", (req: Request, res: Response) => {
     res.send("Sports Facility Booking Platform Server is running correctly..!");
