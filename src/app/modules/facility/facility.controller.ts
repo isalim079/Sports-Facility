@@ -13,9 +13,7 @@ const createFacilityIntoDB = catchAsync(async (req, res) => {
     })
 })
 
-const getAllFacilityFromDB = catchAsync(async(req, res) => {
-
-    // console.log('test', req.user);   
+const getAllFacilityFromDB = catchAsync(async(req, res) => { 
 
     const result = await FacilityServices.getAllFacilityFromDB()
     sendResponse(res, {

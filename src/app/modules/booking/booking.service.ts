@@ -3,10 +3,9 @@ import { Booking } from "./booking.model";
 import { BOOKING_INFO } from "./booking.constant";
 import AppError from "../../errors/AppError";
 import httpStatus from "http-status";
-import { TBooking, TTimeSlot } from "./booking.interface";
+import { TBooking } from "./booking.interface";
 import { Types } from "mongoose";
 import { Facility } from "../facility/facility.model";
-import catchAsync from "../../utils/catchAsync";
 
 const createBookingIntoDB = async (
     userId: Types.ObjectId,
@@ -141,7 +140,19 @@ const checkAvailabilityFromDB = async (date: string) => {
     return availableSlots;
 };
 
+const getAllBookingsFromDB = async() => {
+    const result = await Booking.find()
+    return result
+}
+
+const getAllBookingsFromDBForUser = async(userId: Types.ObjectId) => {
+    const bookings = await Booking.find({user: userId}).populate('facility')
+    return bookings
+} 
+
 export const BookingServices = {
     createBookingIntoDB,
     checkAvailabilityFromDB,
+    getAllBookingsFromDB,
+    getAllBookingsFromDBForUser,
 };

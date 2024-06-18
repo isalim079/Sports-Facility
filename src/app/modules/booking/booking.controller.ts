@@ -23,7 +23,30 @@ const checkAvailabilityFromDB = catchAsync(async (req, res) => {
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: 'Availability checked successfully ',
+        message: 'Availability checked successfully',
+        data: result
+    })
+})
+
+const getAllBookingsFromDB = catchAsync(async (req, res) => {
+    const result = await BookingServices.getAllBookingsFromDB()
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'Bookings retrieved successfully',
+        data: result
+    })
+})
+
+const getAllBookingsFromDBForUser = catchAsync(async(req, res) => {
+    const userId = req.user.id
+    const result = await BookingServices.getAllBookingsFromDBForUser(userId)
+    console.log(userId);
+    console.log(result);
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'Bookings retrieved successfully',
         data: result
     })
 })
@@ -33,4 +56,6 @@ const checkAvailabilityFromDB = catchAsync(async (req, res) => {
 export const BookingController = {
     createBookingIntoDB,
     checkAvailabilityFromDB,
+    getAllBookingsFromDB,
+    getAllBookingsFromDBForUser,
 }

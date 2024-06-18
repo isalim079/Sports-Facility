@@ -10,4 +10,8 @@ router.post('/api/bookings', auth(USER_ROLE.user), validationRequest(BookingVali
 
 router.get('/api/check-availability', BookingController.checkAvailabilityFromDB)
 
+router.get('/api/bookings', auth(USER_ROLE.admin), BookingController.getAllBookingsFromDB)
+
+router.get('/api/bookings/user', auth(USER_ROLE.user), BookingController.getAllBookingsFromDBForUser)
+
 export const BookingRoutes = router
