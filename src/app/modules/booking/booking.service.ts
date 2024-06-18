@@ -140,19 +140,29 @@ const checkAvailabilityFromDB = async (date: string) => {
     return availableSlots;
 };
 
-const getAllBookingsFromDB = async() => {
-    const result = await Booking.find()
-    return result
-}
+const getAllBookingsFromDB = async () => {
+    const result = await Booking.find();
+    return result;
+};
 
-const getAllBookingsFromDBForUser = async(userId: Types.ObjectId) => {
-    const bookings = await Booking.find({user: userId}).populate('facility')
-    return bookings
-} 
+const getAllBookingsFromDBForUser = async (userId: Types.ObjectId) => {
+    const bookings = await Booking.find({ user: userId }).populate("facility");
+    return bookings;
+};
+
+const deleteBookingsFromDB = async (id: string) => {
+    const result = await Booking.findByIdAndUpdate(
+        { _id: id },
+        { isBooked: BOOKING_INFO.canceled },
+        { new: true }
+    ).populate("facility");
+    return result;
+};
 
 export const BookingServices = {
     createBookingIntoDB,
     checkAvailabilityFromDB,
     getAllBookingsFromDB,
     getAllBookingsFromDBForUser,
+    deleteBookingsFromDB,
 };

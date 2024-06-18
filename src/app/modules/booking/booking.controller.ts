@@ -51,6 +51,17 @@ const getAllBookingsFromDBForUser = catchAsync(async(req, res) => {
     })
 })
 
+const deleteBookingFromDB = catchAsync(async (req, res) => {
+    const {id} = req.params;
+    const result = await BookingServices.deleteBookingsFromDB(id)
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Booking cancelled successfully",
+        data: result
+    })
+})
+
 
 
 export const BookingController = {
@@ -58,4 +69,5 @@ export const BookingController = {
     checkAvailabilityFromDB,
     getAllBookingsFromDB,
     getAllBookingsFromDBForUser,
+    deleteBookingFromDB
 }
