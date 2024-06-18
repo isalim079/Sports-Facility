@@ -41,8 +41,16 @@ const getAllBookingsFromDB = catchAsync(async (req, res) => {
 const getAllBookingsFromDBForUser = catchAsync(async(req, res) => {
     const userId = req.user.id
     const result = await BookingServices.getAllBookingsFromDBForUser(userId)
-    console.log(userId);
-    console.log(result);
+
+    if (result.length === 0) {
+        sendResponse(res, {
+            statusCode: httpStatus.NOT_FOUND,
+            success: false,
+            message: "No Data Found",
+            data: result,
+        });
+    }
+
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,

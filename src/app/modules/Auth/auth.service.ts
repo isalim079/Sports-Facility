@@ -18,7 +18,6 @@ const loginUser = async (payload: TLoginUser) => {
 
     // check password
     const isPasswordMatched = await bcrypt.compare(payload?.password, isUserEmailExists?.password)
-    console.log(isPasswordMatched);
 
     if(!isPasswordMatched) {
         throw new AppError(httpStatus.NOT_FOUND, 'Password not matched')
