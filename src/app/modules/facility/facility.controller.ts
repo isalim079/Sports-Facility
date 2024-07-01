@@ -5,11 +5,22 @@ import { FacilityServices } from "./facility.service";
 
 const createFacilityIntoDB = catchAsync(async (req, res) => {
     const result = await FacilityServices.createFacilityIntoDB(req.body);
+
+    // modified
+    const formattedResult = {
+        _id: result._id,
+        name: result.name,
+        description: result.description,
+        pricePerHour: result.pricePerHour,
+        location: result.location,
+        isDeleted: result.isDeleted
+    }
+
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
         message: "Facility added successfully",
-        data: result,
+        data: formattedResult,
     });
 });
 

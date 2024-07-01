@@ -15,4 +15,12 @@ const bookingSchema = new Schema<TBooking>({
     },
 });
 
+// modified
+bookingSchema.set('toJSON', {
+    transform: (doc, ret) => {
+        delete ret.__v;
+        return ret
+    }
+})
+
 export const Booking = model<TBooking>('Booking', bookingSchema)

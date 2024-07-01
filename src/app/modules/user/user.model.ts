@@ -45,4 +45,11 @@ userSchema.post("save", function (doc, next) {
     next();
 });
 
+userSchema.set('toJSON', {
+    transform: (doc, ret) => {
+        delete ret.__v;
+        return ret
+    }
+})
+
 export const User = model<TUser>("User", userSchema);

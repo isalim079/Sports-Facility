@@ -9,4 +9,13 @@ const facilitySchema = new Schema<TFacility>({
     isDeleted: { type: Boolean, default: false },
 });
 
+// modified
+
+facilitySchema.set('toJSON', {
+    transform: (doc, ret) => {
+        delete ret.__v;
+        return ret
+    }
+})
+
 export const Facility = model<TFacility>('Facility', facilitySchema)

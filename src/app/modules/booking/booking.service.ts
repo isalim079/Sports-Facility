@@ -141,7 +141,7 @@ const checkAvailabilityFromDB = async (date: string) => {
 };
 
 const getAllBookingsFromDB = async () => {
-    const result = await Booking.find();
+    const result = await Booking.find().populate("user").populate("facility");      // modified
     return result;
 };
 
