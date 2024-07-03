@@ -47,6 +47,7 @@ userSchema.post("save", function (doc, next) {
 
 userSchema.set('toJSON', {
     transform: (doc, ret) => {
+        delete ret.password
         delete ret.__v;
         return ret
     }
