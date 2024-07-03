@@ -17,28 +17,47 @@ const auth = (...requiredRoles: TUserRole[]) => {
             const token = bearerToken?.split(' ')[1]
 
             if (!token) {
-                throw new AppError(
-                    httpStatus.UNAUTHORIZED,
-                    "You have no access to this route"
-                );
+                // throw new AppError(
+                //     httpStatus.UNAUTHORIZED,
+                //     "You have no access to this route"
+                // );
+
+                return res.status(httpStatus.UNAUTHORIZED).json({
+                    success: false,
+                    statusCode: 401,
+                    message: 'You have no access to this route',
+                    // error: '',
+                  });
             }
 
             // check if the token is valid
             jwt.verify(token, config.jwt_access_secret as string, function(err, decoded) {
                 if(err) {
-                    throw new AppError(
-                        httpStatus.UNAUTHORIZED,
-                        "You have no access to this route"
-                    );
+                    // throw new AppError(
+                    //     httpStatus.UNAUTHORIZED,
+                    //     "You have no access to this route"
+                    // );
+                    return res.status(httpStatus.UNAUTHORIZED).json({
+                        success: false,
+                        statusCode: 401,
+                        message: 'You have no access to this route',
+                        // error: '',
+                      });
                 }
 
                 const role = (decoded as JwtPayload).role
 
                 if(requiredRoles && !requiredRoles.includes(role)) {
-                    throw new AppError(
-                        httpStatus.UNAUTHORIZED,
-                        "You have no access to this route"
-                    );
+                    // throw new AppError(
+                    //     httpStatus.UNAUTHORIZED,
+                    //     "You have no access to this route"
+                    // );
+                    return res.status(httpStatus.UNAUTHORIZED).json({
+                        success: false,
+                        statusCode: 401,
+                        message: 'You have no access to this route',
+                        // error: '',
+                      });
                 }
                 
                 req.user = decoded as JwtPayload
