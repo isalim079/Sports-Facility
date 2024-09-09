@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import { userServices } from "./user.service";
 import sendResponse from "../../utils/sendResponse";
 import httpStatus from "http-status";
+import catchAsync from "../../utils/catchAsync";
 
 const createUser: RequestHandler = async (req, res, next) => {
     try {
@@ -19,6 +20,25 @@ const createUser: RequestHandler = async (req, res, next) => {
     }
 }
 
+const getAllUsersFromDB = catchAsync(async (req, res) => {
+    const result = await userServices.getAllUsersFromDB();
+    if (result.length === 0) {
+        sendResponse(res, {
+            statusCode: httpStatus.NOT_FOUND,
+            success: false,
+            message: "No user Found",
+            data: result,
+        });
+    }
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "All users retrieved successfully",
+        data: result,
+    });
+});
+
 export const UserControllers = {
-    createUser
+    createUser,
+    getAllUsersFromDB,
 }

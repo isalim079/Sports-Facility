@@ -12,6 +12,13 @@ const getAllFacilityFromDB = async () => {
     return result;
 };
 
+const getSingleFacilityFromDB = async (id: string) => {
+    const result = Facility.findById(id)
+    // console.log(result);
+
+    return result
+}
+
 const updateFacilityIntoDB = async (
     id: string,
     updateInfo: Partial<TFacility>
@@ -31,5 +38,6 @@ export const FacilityServices = {
     createFacilityIntoDB,
     getAllFacilityFromDB,
     updateFacilityIntoDB,
-    deleteFacilityFromDB
+    deleteFacilityFromDB,
+    getSingleFacilityFromDB,
 };

@@ -7,7 +7,8 @@ export type TBooking = {
     user: Schema.Types.ObjectId;
     facility: Schema.Types.ObjectId;
     payableAmount: number;
-    isBooked: 'confirmed' | 'unconfirmed' | 'canceled'
+    isBooked: 'confirmed' | 'unconfirmed' | 'canceled',
+    tnxId?: string
 }
 
 export type TTimeSlot = {

@@ -31,8 +31,18 @@ const createBookingIntoDB = catchAsync(async (req, res) => {
 
 const checkAvailabilityFromDB = catchAsync(async (req, res) => {
     const date = req.query.date ? String(req.query.date): moment().format('YYYY-MM-DD')
+    const facilityId = req.query.facility ? String(req.query.facility) : null
 
-    const result = await BookingServices.checkAvailabilityFromDB(date)
+    if(!facilityId) {
+        return  sendResponse(res, {
+            statusCode: httpStatus.BAD_REQUEST,
+            success: true,
+            message: 'Facility ID is required',
+            data: null
+        })
+    }
+
+    const result = await BookingServices.checkAvailabilityFromDB(date, facilityId)
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
@@ -77,7 +87,8 @@ const getAllBookingsFromDBForUser = catchAsync(async(req, res) => {
         endTime: booking.endTime,
         user: booking.user,
         payableAmount: booking.payableAmount,
-        isBooked: booking.isBooked
+        isBooked: booking.isBooked,
+        tnxId: booking.tnxId,
     }));
 
     if (result.length === 0) {
@@ -121,6 +132,31 @@ const deleteBookingFromDB = catchAsync(async (req, res) => {
     })
 })
 
+const updateIsBooked = catchAsync(async(req, res) => {
+    const {id} = req.params
+    const {isBooked, tnxId} = req.body;
+
+    const result = await BookingServices.updateIsBooked(id, isBooked, tnxId)
+
+    if (!result) {
+        return sendResponse(res, {
+            statusCode: httpStatus.NOT_FOUND,
+            success: false,
+            message: "Booking not found",
+            data: null,
+        });
+    }
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Booking status updated successfully",
+        data: result,
+    });
+
+
+})
+
 
 
 export const BookingController = {
@@ -128,5 +164,6 @@ export const BookingController = {
     checkAvailabilityFromDB,
     getAllBookingsFromDB,
     getAllBookingsFromDBForUser,
-    deleteBookingFromDB
+    deleteBookingFromDB,
+    updateIsBooked
 }

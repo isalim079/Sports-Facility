@@ -36,4 +36,6 @@ router.delete(
     BookingController.deleteBookingFromDB
 );
 
+router.patch('/api/bookings/:id/status', BookingController.updateIsBooked)
+
 export const BookingRoutes = router;

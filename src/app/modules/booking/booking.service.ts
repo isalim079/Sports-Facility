@@ -59,10 +59,12 @@ const createBookingIntoDB = async (
         "hours",
         true
     );
-    const payableAmount = durationInHours * facilityDetails.pricePerHour;
+    const payableAmount = (Math.abs(durationInHours) * facilityDetails.pricePerHour).toFixed(2);
 
     const formattedStartTime = moment(startDateTime).format("HH:mm");
     const formattedEndTime = moment(endDateTime).format("HH:mm");
+
+    // console.log(payload);
 
     // Create booking
     const newBooking = await Booking.create({
@@ -72,17 +74,18 @@ const createBookingIntoDB = async (
         startTime: formattedStartTime,
         endTime: formattedEndTime,
         payableAmount,
-        isBooked: BOOKING_INFO.confirmed,
+        isBooked: payload?.isBooked,
     });
 
     return newBooking;
 };
 
-const checkAvailabilityFromDB = async (date: string) => {
+const checkAvailabilityFromDB = async (date: string, facilityId: string) => {
     const queryDate = date ? moment(date, "YYYY-MM-DD").toDate() : new Date();
 
     const bookings = await Booking.find({
         date: queryDate,
+        facility: facilityId, // updated
         isBooked: "confirmed",
     });
 
@@ -159,10 +162,25 @@ const deleteBookingsFromDB = async (id: string) => {
     return result;
 };
 
+const updateIsBooked = async(id: string, isBooked: string, tnxId: string) => {
+    // console.log(isBooked);
+    // console.log(tnxId);
+
+    const updateIsBooked = await Booking.findByIdAndUpdate(
+        {_id: id},
+        {$set: {isBooked: isBooked, tnxId: tnxId}},
+        {new: true}
+    ).populate('facility')
+    return updateIsBooked
+}
+
+
+
 export const BookingServices = {
     createBookingIntoDB,
     checkAvailabilityFromDB,
     getAllBookingsFromDB,
     getAllBookingsFromDBForUser,
     deleteBookingsFromDB,
+    updateIsBooked
 };

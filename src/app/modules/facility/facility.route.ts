@@ -7,24 +7,30 @@ import { USER_ROLE } from "../user/user.constant";
 const router = express.Router();
 
 router.post(
-    "/api/facility",
-    auth(USER_ROLE.admin),
-    validationRequest(FacilityValidation.facilityValidationSchema),
-    FacilityControllers.createFacilityIntoDB
+  "/api/facility",
+  auth(USER_ROLE.admin),
+  validationRequest(FacilityValidation.facilityValidationSchema),
+  FacilityControllers.createFacilityIntoDB
 );
 
 router.get("/api/facility", FacilityControllers.getAllFacilityFromDB);
 
+router.get(
+  "/api/facility/:id",
+  auth(USER_ROLE.admin),
+  FacilityControllers.getSingleFacilityFromDB
+);
+
 router.put(
-    "/api/facility/:id",
-    auth(USER_ROLE.admin),
-    FacilityControllers.updateFacilityFromDB
+  "/api/facility/:id",
+  auth(USER_ROLE.admin),
+  FacilityControllers.updateFacilityFromDB
 );
 
 router.delete(
-    "/api/facility/:id",
-    auth(USER_ROLE.admin),
-    FacilityControllers.deleteFacilityFromDB
+  "/api/facility/:id",
+  auth(USER_ROLE.admin),
+  FacilityControllers.deleteFacilityFromDB
 );
 
 export const FacilityRoutes = router;

@@ -13,6 +13,7 @@ const bookingSchema = new Schema<TBooking>({
         enum: ["confirmed", "unconfirmed", "canceled"],
         required: true,
     },
+    tnxId: { type: String },
 });
 
 // modified
