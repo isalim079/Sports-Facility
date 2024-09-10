@@ -6,23 +6,28 @@ import { UserRoutes } from "./app/modules/user/user.route";
 import { AuthRoutes } from "./app/modules/Auth/auth.route";
 import { FacilityRoutes } from "./app/modules/facility/facility.route";
 import { BookingRoutes } from "./app/modules/booking/booking.route";
-import paymentRoutes from './app/routes/payments.route'
+import paymentRoutes from "./app/routes/payments.route";
 
 const app: Application = express();
 
 //parsers
 app.use(express.json());
-app.use(cors({origin: 'http://localhost:5173', credentials: true}));
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://sports-facility-client.vercel.app"],
+    credentials: true,
+  })
+);
 
 // application routes
 app.use("/", UserRoutes);
 app.use("/", AuthRoutes);
-app.use("/", FacilityRoutes)
-app.use('/', BookingRoutes)
-app.use('/', paymentRoutes)
+app.use("/", FacilityRoutes);
+app.use("/", BookingRoutes);
+app.use("/", paymentRoutes);
 
 app.get("/", (req: Request, res: Response) => {
-    res.send("Sports Facility Booking Platform Server is running correctly..!");
+  res.send("Sports Facility Booking Platform Server is running correctly..!");
 });
 
 app.use(globalErrorHandler);
