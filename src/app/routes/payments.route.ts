@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import Stripe from "stripe";
 import config from "../config";
 
-const stripe = new Stripe(config.stripe_secret_key as string);
+const stripe = new Stripe(config.stripe_secret_key as any);
 
 const router = express.Router();
 
