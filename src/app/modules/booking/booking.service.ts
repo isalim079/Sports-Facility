@@ -173,6 +173,10 @@ const updateIsBooked = async(id: string, isBooked: string, tnxId: string) => {
     ).populate('facility')
     return updateIsBooked
 }
+const deleteBookingPermanentlyFromDB = async (id: string) => {
+    const result = await Booking.findByIdAndDelete(id);
+    return result;
+};
 
 
 
@@ -182,5 +186,6 @@ export const BookingServices = {
     getAllBookingsFromDB,
     getAllBookingsFromDBForUser,
     deleteBookingsFromDB,
-    updateIsBooked
+    updateIsBooked,
+    deleteBookingPermanentlyFromDB
 };

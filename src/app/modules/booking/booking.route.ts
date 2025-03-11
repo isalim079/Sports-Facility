@@ -38,4 +38,10 @@ router.delete(
 
 router.patch('/api/bookings/:id/status', BookingController.updateIsBooked)
 
+router.delete(
+    "/api/bookings/admin/:id",
+    auth(USER_ROLE.admin), 
+    BookingController.deleteBookingPermanentlyFromDB
+);
+
 export const BookingRoutes = router;

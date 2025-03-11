@@ -9,6 +9,14 @@ const facilitySchema = new Schema<TFacility>({
     facilityType: {type: String, enum: ["topFacility", "normalFacility"], default: "normalFacility"},
     location: { type: String, required: true }, 
     isDeleted: { type: Boolean, default: false },
+    features: { type: [String], required: true }, 
+    operatingHours: { type: String, required: true }, 
+    contactInfo: {
+      email: { type: String, required: true },
+      phone: { type: String, required: true }, 
+    },
+    gallery: { type: [String], required: true },
+  
 });
 
 // modified

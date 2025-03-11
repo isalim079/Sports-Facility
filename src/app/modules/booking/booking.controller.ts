@@ -157,6 +157,18 @@ const updateIsBooked = catchAsync(async(req, res) => {
 
 })
 
+const deleteBookingPermanentlyFromDB = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const result = await BookingServices.deleteBookingPermanentlyFromDB(id);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Booking deleted permanently",
+        data: result,
+    });
+});
+
 
 
 export const BookingController = {
@@ -165,5 +177,6 @@ export const BookingController = {
     getAllBookingsFromDB,
     getAllBookingsFromDBForUser,
     deleteBookingFromDB,
-    updateIsBooked
+    updateIsBooked,
+    deleteBookingPermanentlyFromDB,
 }
